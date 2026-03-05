@@ -79,7 +79,7 @@ Click **"mindmap-frontend"** service in the Railway dashboard.
 Go to the **"Variables"** tab and add this:
 
 ```
-REACT_APP_API_URL=https://mindmap-backend-REPLACE.railway.app
+VITE_BACKEND_URL=https://mindmap-backend-REPLACE.railway.app
 ```
 
 **Replace `REPLACE` with your actual backend service name from Railway.**

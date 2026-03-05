@@ -51,9 +51,9 @@ Your agent calls these to manage its mindmap:
 
 ## Deployment
 
-**See `RAILWAY_DEPLOY.md`** for the complete step-by-step guide.
+Fork this repo, connect it to Railway, add env vars + volume, done.
 
-TL;DR: Push to GitHub, connect to Railway, add a volume at `/app/data`, done.
+**See `RAILWAY_DEPLOY.md`** for the complete step-by-step guide.
 
 ## Cost
 

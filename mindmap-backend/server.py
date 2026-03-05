@@ -5,6 +5,7 @@ Flask API for HAL's visual knowledge graph
 Port 5002 (voice is on 5001)
 """
 
+import os
 import logging
 import numpy as np
 from flask import Flask, request, jsonify
