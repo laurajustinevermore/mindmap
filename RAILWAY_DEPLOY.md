@@ -57,7 +57,9 @@ LETTA_API_KEY=your-letta-api-key-here
 
 (Get your LETTA_API_KEY from https://console.letta.com)
 
-### Add Volume (CRITICAL - Don't Skip This!)
+### Add Volume (CRITICAL - Do This Before Testing!)
+
+⚠️ **WITHOUT THIS STEP, YOUR DATABASE WILL BE DELETED ON EVERY REDEPLOY** ⚠️
 
 Go to the **"Data"** tab:
 
@@ -65,8 +67,11 @@ Go to the **"Data"** tab:
 2. Set name to: `mindmap-data`
 3. Set mount path to: `/app/data`
 4. Leave size as default (1GB)
+5. **Hit Create** and wait for it to show "Mounted"
 
-**Why?** Railway deletes files on every deploy. The volume keeps your database safe.
+**Why?** Railway's filesystem is ephemeral—everything gets wiped on redeploy. The volume is persistent storage. Without it, all memories disappear.
+
+**Don't proceed to Step 5 until the volume shows "Mounted" in the Data tab.**
 
 ---
 
@@ -88,23 +93,41 @@ VITE_BACKEND_URL=https://mindmap-backend-REPLACE.railway.app
 
 ---
 
-## Step 5: Deploy
+## Step 5: Verify Volume is Mounted
 
-That's it. Railway automatically deploys when you pushed the repo.
+Before your agent starts inserting memories, **verify the volume is actually mounted**.
+
+In the backend service:
+1. Go to **"Logs"** tab
+2. Look for this line: `Database initialized at /app/data/mindmap.db`
+3. If you see it, the volume is working ✓
+4. If you see `Database initialized at /app/data/mindmap.db` but it disappears after redeploy, **the volume isn't mounted properly**—go back to Step 3 and check
+
+## Step 6: Deploy & Watch
+
+Railway automatically deploys when you pushed the repo.
 
 Watch the logs:
-- **Backend**: Should say "Flask running on 0.0.0.0:5002"
+- **Backend**: Should say "Database initialized at /app/data/mindmap.db" and "Flask running on 0.0.0.0:5002"
 - **Frontend**: Should say "npm run build" completed
 
 ---
 
-## Step 6: Access Your Mindmap
+## Step 7: Access Your Mindmap
 
 Once both services show **"Healthy"** in the Railway dashboard:
 
 1. Go to your frontend service URL (shown in Railway)
 2. You'll see an empty graph (because no memories yet)
 3. Your agent can now insert memories into this mindmap!
+
+⚠️ **Important**: Before your agent starts working, confirm:
+- [ ] Backend logs show "Database initialized at /app/data/mindmap.db"
+- [ ] Volume is showing as "Mounted" in the backend Data tab
+- [ ] Both services are "Healthy"
+- [ ] Frontend loads without errors
+
+If you skip this verification and redeployed later, the database **will be lost**.
 
 ---
 
@@ -129,9 +152,19 @@ The frontend visualizes all of this in real-time.
 - Check REACT_APP_API_URL is correct in frontend variables
 - Check backend is showing "Healthy"
 
-**Database keeps disappearing?**
-- **Verify volume is mounted at `/app/data`** in the backend service
-- This is the #1 issue—don't skip it
+**Database keeps disappearing after redeploy?**
+- **This means the volume isn't mounted.** Go back to Step 3.
+- Check backend service → "Data" tab
+- If volume shows "Unmounted" or is missing: Create it again with mount path `/app/data`
+- Wait for "Mounted" status before redeploying
+- This is the #1 cause of data loss
+
+**How to tell if volume is working:**
+1. Insert a memory
+2. Check backend logs: `SELECT COUNT(*) FROM nodes;` should show 1
+3. Redeploy the backend service
+4. Check logs again: should still show 1 memory
+5. If count drops to 0, volume wasn't persisting—fix Step 3
 
 ---
 
