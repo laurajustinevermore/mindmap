@@ -1,0 +1,19 @@
+{
+  "name": "hal-mindmap-ui",
+  "version": "1.0.0",
+  "description": "HAL's navigable consciousness visualization",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "reagraph": "^4.30.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.11"
+  }
+}
