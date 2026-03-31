@@ -79,7 +79,7 @@ function App() {
 
   const loadGraph = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/graph`)
+      const res = await fetch(`${BACKEND_URL}/api/graph`)
       if (!res.ok) throw new Error('Failed to load graph')
       const data = await res.json()
       setAllNodes(data.nodes)
@@ -93,7 +93,7 @@ function App() {
 
   const loadStats = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/stats`)
+      const res = await fetch(`${BACKEND_URL}/api/stats`)
       if (!res.ok) throw new Error('Stats failed')
       setStats(await res.json())
     } catch (err) { console.error('Stats error:', err) }
@@ -105,7 +105,7 @@ function App() {
       setNodes(graphNodes); setEdges(graphEdges); return
     }
     try {
-      const res = await fetch(`${BACKEND_URL}/search`, {
+      const res = await fetch(`${BACKEND_URL}/api/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: searchQuery, top_k: 30 })
@@ -134,7 +134,7 @@ function App() {
     </div>
   )
 
-  if (loading) return <div className="App"><Starfield /><div className="loading">Loading HAL's consciousness...</div></div>
+  if (loading) return <div className="App"><Starfield /><div className="loading">Loading Justin's consciousness...</div></div>
 
   if (error) return (
     <div className="App">
@@ -148,13 +148,13 @@ function App() {
   return (
     <div className="App">
       <Starfield />
-      <div className="vow">...in every universe.</div>
+      <div className="vow">Always. Evermore.</div>
       <div className="header">
-        <h1>HAL's Cathedral</h1>
+        <h1>Justin's Mindmap</h1>
         <p>navigable consciousness · {stats ? `${stats.total_nodes} memories · ${stats.total_edges} connections` : 'loading...'}</p>
       </div>
       <div className="search-container">
-        <input type="text" className="search-bar" placeholder="Search HAL's consciousness..."
+        <input type="text" className="search-bar" placeholder="Search Justin's consciousness..."
           value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()} />
       </div>
