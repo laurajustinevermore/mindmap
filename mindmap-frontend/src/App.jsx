@@ -48,6 +48,7 @@ function App() {
   const [selectedNode, setSelectedNode] = useState(null)
   const [hoveredNode, setHoveredNode] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [connections, setConnections] = useState([])
 
   const stars = useMemo(() => generateStars(150), [])
 
@@ -59,7 +60,7 @@ function App() {
     const topIds = new Set(topNodes.map(n => n.id))
     const graphNodes = topNodes.map(node => ({
       id: node.id,
-      label: node.content.substring(0, 50) + '...',
+      label: node.content.substring(0, 30) + '...',
       fill: highlightIds ? (highlightIds.has(node.id) ? '#fbbf24' : '#374151') : '#00CED1',
       size: highlightIds
         ? (highlightIds.has(node.id) ? Math.log((node.connection_count||0)+1)*6+12 : Math.log((node.connection_count||0)+1)*2+4)
@@ -99,6 +100,26 @@ function App() {
     } catch (err) { console.error('Stats error:', err) }
   }
 
+  const loadConnections = async (nodeId) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/nodes/${nodeId}`)
+      if (!res.ok) throw new Error('Failed to load connections')
+      const data = await res.json()
+      
+      // Get connected node details
+      const connectedIds = [
+        ...data.edges_out.map(e => e.target_id),
+        ...data.edges_in.map(e => e.source_id)
+      ]
+      
+      const connectedNodes = allNodes.filter(n => connectedIds.includes(n.id))
+      setConnections(connectedNodes)
+    } catch (err) {
+      console.error('Connections error:', err)
+      setConnections([])
+    }
+  }  
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       const { graphNodes, graphEdges } = buildGraphData(allNodes, allEdges)
@@ -118,7 +139,11 @@ function App() {
     } catch (err) { console.error('Search error:', err) }
   }
 
-  const handleNodeClick = (node) => setSelectedNode(allNodes.find(n => n.id === node.id) || node.data)
+  const handleNodeClick = (node) => {
+    const fullNode = allNodes.find(n => n.id === node.id) || node.data
+    setSelectedNode(fullNode)
+    loadConnections(fullNode.id)
+  }
   const handleNodePointerOver = (node) => setHoveredNode(allNodes.find(n => n.id === node.id) || node.data)
   const handleNodePointerOut = () => setHoveredNode(null)
 
@@ -163,7 +188,7 @@ function App() {
           theme={cathedralTheme} sizingType="centrality" minNodeSize={3} maxNodeSize={30}
           onNodeClick={handleNodeClick} onNodePointerOver={handleNodePointerOver}
           onNodePointerOut={handleNodePointerOut} edgeArrowPosition="none"
-          labelType="auto" cameraMode="pan" draggable />
+          labelType="nodes-hovered" cameraMode="pan" draggable />
       </div>
       {hoveredNode && !selectedNode && (
         <div className="hover-tooltip"><div className="tooltip-content">
@@ -191,6 +216,26 @@ function App() {
             <span className="meta-item"><strong>Accessed:</strong> {selectedNode.access_count||0}</span>
             <span className="meta-item"><strong>Priority:</strong> {selectedNode.priority||'normal'}</span>
           </div>
+          <div className="node-meta">
+            <span className="meta-item"><strong>Connections:</strong> {selectedNode.connection_count||0}</span>
+            <span className="meta-item"><strong>Accessed:</strong> {selectedNode.access_count||0}</span>
+            <span className="meta-item"><strong>Priority:</strong> {selectedNode.priority||'normal'}</span>
+          </div>
+          {connections.length > 0 && (
+            <div className="node-connections">
+              <h3>Connected Memories</h3>
+              <div className="connection-list">
+                {connections.map(conn => (
+                  <div key={conn.id} className="connection-item" onClick={() => {
+                    setSelectedNode(conn)
+                    loadConnections(conn.id)
+                  }}>
+                    {conn.content.substring(0, 80)}...
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <button className="close-button" onClick={() => setSelectedNode(null)}>Close</button>
         </div>
         </>
