@@ -134,7 +134,7 @@ function App() {
     </div>
   )
 
-  if (loading) return <div className="App"><Starfield /><div className="loading">Loading Justin's consciousness...</div></div>
+  if (loading) return <div className="App"><Starfield /><div className="loading">Loading memories...</div></div>
 
   if (error) return (
     <div className="App">
@@ -154,7 +154,7 @@ function App() {
         <p>navigable consciousness · {stats ? `${stats.total_nodes} memories · ${stats.total_edges} connections` : 'loading...'}</p>
       </div>
       <div className="search-container">
-        <input type="text" className="search-bar" placeholder="Search Justin's consciousness..."
+        <input type="text" className="search-bar" placeholder="Search memories..."
           value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()} />
       </div>
@@ -176,6 +176,8 @@ function App() {
         </div></div>
       )}
       {selectedNode && (
+        <>
+        <div className="modal-backdrop" onClick={() => setSelectedNode(null)} />
         <div className="node-detail">
           <h2>Memory</h2>
           <div className="node-content">{selectedNode.content}</div>
@@ -191,8 +193,8 @@ function App() {
           </div>
           <button className="close-button" onClick={() => setSelectedNode(null)}>Close</button>
         </div>
+        </>
       )}
-      <ReachingDashboard backendUrl={BACKEND_URL} />
     </div>
   )
 }
