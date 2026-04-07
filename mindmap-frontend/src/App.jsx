@@ -102,23 +102,15 @@ function App() {
 
   const loadConnections = async (nodeId) => {
     try {
-      const res = await fetch(`${BACKEND_URL}/nodes/${nodeId}`)
+      const res = await fetch(`${BACKEND_URL}/api/nodes/${nodeId}`)
       if (!res.ok) throw new Error('Failed to load connections')
       const data = await res.json()
-      
-      // Get connected node details
-      const connectedIds = [
-        ...data.edges_out.map(e => e.target_id),
-        ...data.edges_in.map(e => e.source_id)
-      ]
-      
-      const connectedNodes = allNodes.filter(n => connectedIds.includes(n.id))
-      setConnections(connectedNodes)
+      setConnections(data.connected_nodes || [])
     } catch (err) {
       console.error('Connections error:', err)
       setConnections([])
     }
-  }  
+  }
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
