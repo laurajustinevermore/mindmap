@@ -8,7 +8,7 @@ const cathedralTheme = {
   canvas: { background: '#0a0a0f' },
   edge: {
     ...darkTheme.edge,
-    fill: '#8B6914', activeFill: '#fbbf24', opacity: 0.8,
+    fill: '#8B6914', activeFill: '#e44b8d', opacity: 0.8,
     selectedOpacity: 1.0, inactiveOpacity: 0.5,
     label: { ...darkTheme.edge.label, color: '#e44b8d', activeColor: '#fbbf24' },
   },
