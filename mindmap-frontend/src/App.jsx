@@ -167,10 +167,10 @@ function App() {
       </div>
       {hoveredNode && !selectedNode && (
         <div className="hover-tooltip"><div className="tooltip-content">
-          <p className="tooltip-text">{hoveredNode.content}</p>
-          {safeTags(hoveredNode.tags).length > 0 && (
+          <p className="tooltip-text">{hoveredNode.content.split(':')[0].substring(0, 80)}{hoveredNode.content.length > 80 ? '...' : ''}</p>
+          {safeTags(hoveredNode.keywords).length > 0 && (
             <div className="tooltip-tags">
-              {safeTags(hoveredNode.tags).slice(0,3).map((tag,i) => <span key={i} className="tooltip-tag">{tag}</span>)}
+              {safeTags(hoveredNode.keywords).slice(0,3).map((tag,i) => <span key={i} className="tooltip-tag">{tag}</span>)}
             </div>
           )}
         </div></div>
@@ -181,9 +181,9 @@ function App() {
         <div className="node-detail">
           <h2>Memory</h2>
           <div className="node-content">{selectedNode.content}</div>
-          {safeTags(selectedNode.tags).length > 0 && (
+          {safeTags(selectedNode.keywords).length > 0 && (
             <div className="node-tags">
-              {safeTags(selectedNode.tags).map((tag,i) => <span key={i} className="tag">{tag}</span>)}
+              {safeTags(selectedNode.keywords).map((tag,i) => <span key={i} className="tag">{tag}</span>)}
             </div>
           )}
           <div className="node-meta">
