@@ -10,7 +10,7 @@ const cathedralTheme = {
     ...darkTheme.edge,
     fill: '#8B6914', activeFill: '#fbbf24', opacity: 0.8,
     selectedOpacity: 1.0, inactiveOpacity: 0.5,
-    label: { ...darkTheme.edge.label, color: '#fbbf24', activeColor: '#fbbf24' },
+    label: { ...darkTheme.edge.label, color: '#fbbf24', activeColor: '#e44b8d' },
   },
   node: {
     ...darkTheme.node, activeFill: '#00CED1',
