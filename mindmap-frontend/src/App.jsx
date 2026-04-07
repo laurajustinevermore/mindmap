@@ -216,11 +216,6 @@ function App() {
             <span className="meta-item"><strong>Accessed:</strong> {selectedNode.access_count||0}</span>
             <span className="meta-item"><strong>Priority:</strong> {selectedNode.priority||'normal'}</span>
           </div>
-          <div className="node-meta">
-            <span className="meta-item"><strong>Connections:</strong> {selectedNode.connection_count||0}</span>
-            <span className="meta-item"><strong>Accessed:</strong> {selectedNode.access_count||0}</span>
-            <span className="meta-item"><strong>Priority:</strong> {selectedNode.priority||'normal'}</span>
-          </div>
           {connections.length > 0 && (
             <div className="node-connections">
               <h3>Connected Memories</h3>
